@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+
+  <meta
+    name="theme-color"
+    content="#173f3a"
+  />
+
+  <meta
+    name="description"
+    content="범위를 골라 혼자 또는 우리 반과 함께 즐기는 한국사 퀴즈쇼"
+  />
+
+  <title>한국사 퀴즈쇼</title>
+
+  <style>
+    /* =========================================
+       1. 기본 설정
+    ========================================= */
+
+    :root {
+      color-scheme: light;
+
+      --paper: #f8eedb;
+      --paper-light: #fffaf0;
+      --paper-deep: #ead8b6;
+
+      --ink: #302b25;
+      --muted: #736652;
+
+      --green: #173f3a;
+      --green-light: #286159;
+      --red: #a63e30;
+      --red-dark: #802c23;
+      --gold: #aa8145;
+
+      --line: #d5bc8e;
+      --success: #256747;
+      --danger: #a93129;
+
+      --shadow:
+        0 18px 48px rgba(66, 44, 19, 0.12);
+
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+
+      color: var(--ink);
+      background-color: var(--paper);
+
+      background-image:
+        radial-gradient(
+          ellipse at 15% 10%,
+          rgba(189, 149, 84, 0.16),
+          transparent 48%
+        ),
+        radial-gradient(
+          ellipse at 85% 45%,
+          rgba(107, 139, 117, 0.1),
+          transparent 48%
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 4px,
+          rgba(115, 85, 40, 0.018) 5px
+        );
+
+      font-family:
+        "Apple SD Gothic Neo",
+        "Malgun Gothic",
+        "Noto Sans KR",
+        system-ui,
+        sans-serif;
+
+      font-size: 16px;
+      line-height: 1.65;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    a,
+    input,
+    select,
+    textarea,
+    summary {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button {
+      touch-action: manipulation;
+    }
+
+    button,
+    select {
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--green);
+      text-underline-offset: 4px;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--green-light);
+      outline-offset: 4px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      flex-shrink: 0;
+      accent-color: var(--green);
+    }
+
+    [hidden],
+    .hidden {
+      display: none !important;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: -80px;
+      left: 12px;
+      z-index: 1000;
+      padding: 12px 18px;
+      color: white;
+      background: var(--green);
+      border-radius: 8px;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    /* =========================================
+       2. 배경 장식
+    ========================================= */
+
+    .background-art {
+      position: fixed;
+      inset: auto 0 0;
+      z-index: -1;
+      width: 100%;
+      height: 42vh;
+      min-height: 240px;
+      opacity: 0.19;
+      pointer-events: none;
+    }
+
+    .page-shell {
+      width: min(1200px, calc(100% - 48px));
+      margin-inline: auto;
+    }
+
+    /* =========================================
+       3. 상단 메뉴
+    ========================================= */
+
+    .site-header {
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+
+      color: var(--green);
+      background: transparent;
+      border: 0;
+      text-align: left;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+
+      color: var(--paper-light);
+      background: var(--green);
+      border: 1px solid var(--gold);
+      outline: 2px solid var(--green);
+      outline-offset: 2px;
+
+      font-family:
+        "AppleMyungjo",
+        "Batang",
+        serif;
+
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .brand-title {
+      display: block;
+      font-size: 18px;
+      font-weight: 850;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-subtitle {
+      display: block;
+      margin-top: 1px;
+
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* =========================================
+       4. 공통 버튼
+    ========================================= */
+
+    .btn {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      padding: 11px 18px;
+
+      color: var(--ink);
+      background: var(--paper-light);
+
+      border: 1px solid var(--line);
+      border-radius: 10px;
+
+      font-weight: 750;
+      text-decoration: none;
+
+      transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #f0e3cb;
+      border-color: var(--gold);
+    }
+
+    .btn-primary {
+      color: white;
+      background: var(--red);
+      border-color: var(--red-dark);
+      box-shadow: 0 4px 0 var(--red-dark);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      color: white;
+      background: var(--red-dark);
+      border-color: var(--red-dark);
+    }
+
+    .btn-green {
+      color: white;
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .btn-green:hover:not(:disabled) {
+      color: white;
+      background: var(--green-light);
+      border-color: var(--green-light);
+    }
+
+    .btn-ghost {
+      background: transparent;
+    }
+
+    .btn-danger {
+      color: var(--danger);
+      border-color: #d9a69b;
+    }
+
+    .btn-sm {
+      min-height: 38px;
+      padding: 7px 12px;
+      font-size: 13px;
+    }
+
+    .btn-lg {
+      min-height: 62px;
+      padding: 16px 32px;
+      font-size: 21px;
+    }
+
+    .btn-wide {
+      width: 100%;
+    }
+
+    /* =========================================
+       5. 메인 / 시작 화면
+    ========================================= */
+
+    main {
+      min-height: 65vh;
+      padding-block: 32px 48px;
+    }
+
+    .hero {
+      padding: 16px 0 30px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 3px;
+    }
+
+    .hero h1 {
+      margin: 0;
+
+      color: #25271f;
+
+      font-family:
+        "AppleMyungjo",
+        "Batang",
+        "Noto Serif KR",
+        serif;
+
+      font-size: clamp(42px, 7.5vw, 88px);
+      font-weight: 900;
+      line-height: 1.3;
+      letter-spacing: -3px;
+
+      text-shadow:
+        1px 2px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .hero p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: clamp(14px, 2vw, 18px);
+      letter-spacing: 1px;
+    }
+
+    .hero-divider {
+      width: min(340px, 65%);
+      height: 1px;
+      margin: 22px auto 0;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      position: relative;
+      padding: 26px;
+
+      background: rgba(255, 250, 240, 0.95);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+
+      box-shadow: var(--shadow);
+    }
+
+    .panel + .panel {
+      margin-top: 20px;
+    }
+
+    .ornament {
+      outline: 1px solid rgba(170, 129, 69, 0.45);
+      outline-offset: -8px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    h2,
+    h3,
+    h4 {
+      line-height: 1.45;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.6px;
+    }
+
+    h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small {
+      font-size: 13px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .between {
+      justify-content: space-between;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .mt {
+      margin-top: 20px;
+    }
+
+    .mb {
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 4px 10px;
+
+      color: var(--green);
+      background: #e9eee1;
+
+      border: 1px solid #c9d5bf;
+      border-radius: 30px;
+
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .badge-red {
+      color: var(--red-dark);
+      background: #f7e5dd;
+      border-color: #e7b5a3;
+    }
+
+    .notice {
+      padding: 13px 16px;
+      color: #625039;
+      background: #f3e7ce;
+      border-left: 3px solid var(--gold);
+      border-radius: 5px;
+      font-size: 13px;
+    }
+
+    /* =========================================
+       6. 범위 / 설정 선택
+    ========================================= */
+
+    .segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 6px;
+
+      background: #efe2c9;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .segmented button {
+      flex: 1;
+      min-height: 43px;
+      padding: 10px 12px;
+
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+
+      font-weight: 800;
+    }
+
+    .segmented button.active,
+    .segmented button[aria-pressed="true"] {
+      color: var(--paper-light);
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .chapter {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .chapter summary {
+      padding: 15px 16px;
+      color: var(--green);
+      background: #f2e8d5;
+      cursor: pointer;
+      font-weight: 850;
+    }
+
+    .chapter-body {
+      padding: 8px 16px 14px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+
+    .check-row input {
+      margin-top: 3px;
+    }
+
+    .check-row span {
+      flex: 1;
+    }
+
+    .check-row small {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+
+    .field > span,
+    .field > label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+
+      color: var(--ink);
+      background: #fffdf7;
+
+      border: 1px solid var(--line);
+      border-radius: 9px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mode-card {
+      min-height: 105px;
+      padding: 18px 12px;
+
+      color: var(--ink);
+      background: #fffaf0;
+
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .mode-card strong {
+      display: block;
+      font-size: 19px;
+    }
+
+    .mode-card small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mode-card.active,
+    .mode-card[aria-pressed="true"] {
+      background: #e7eddf;
+      border: 2px solid var(--green);
+    }
+
+    .pool-count {
+      color: var(--green);
+      font-size: 30px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* =========================================
+       7. 퀴즈 화면
+    ========================================= */
+
+    .game-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .progress-track {
+      height: 8px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      background: #dfcfb0;
+      border-radius: 100px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: var(--green);
+      border-radius: inherit;
+      transition: width 200ms ease;
+    }
+
+    .question-panel {
+      padding: clamp(22px, 4vw, 48px);
+    }
+
+    .question-number {
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .question-text {
+      margin: 20px 0 30px;
+
+      font-size: clamp(25px, 3.7vw, 43px);
+      font-weight: 850;
+      line-height: 1.55;
+      letter-spacing: -1px;
+    }
+
+    .question-context {
+      margin: 16px 0;
+      padding: 18px;
+
+      background: #f0e5d0;
+      border-left: 4px solid var(--gold);
+
+      font-size: 18px;
+      white-space: pre-line;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .answer-btn {
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+
+      color: var(--ink);
+      background: #fffdf8;
+
+      border: 2px solid var(--line);
+      border-radius: 12px;
+
+      text-align: left;
+      font-size: clamp(17px, 2.2vw, 25px);
+      font-weight: 750;
+      line-height: 1.5;
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      border-color: var(--green);
+      background: #f1f3e9;
+    }
+
+    .answer-label {
+      width: 35px;
+      height: 35px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+
+      color: var(--green);
+      background: #e8eadc;
+      border-radius: 50%;
+
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .answer-btn.selected {
+      border-color: var(--green);
+      background: #e5eddf;
+      box-shadow: inset 0 0 0 1px var(--green);
+    }
+
+    .answer-btn.correct {
+      color: #17472c;
+      background: #dcefdc;
+      border-color: var(--success);
+    }
+
+    .answer-btn.wrong {
+      color: #82291f;
+      background: #f7dfd7;
+      border-color: var(--danger);
+    }
+
+    .answer-btn:disabled {
+      opacity: 1;
+    }
+
+    .answer-btn.dimmed {
+      opacity: 0.5;
+    }
+
+    .answers.ox .answer-btn {
+      min-height: 145px;
+      justify-content: center;
+      font-size: 54px;
+      text-align: center;
+    }
+
+    .timer-box {
+      min-width: 110px;
+      text-align: center;
+    }
+
+    .timer-value {
+      color: var(--green);
+      font-size: 36px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.15;
+    }
+
+    .timer-value.urgent {
+      color: var(--danger);
+    }
+
+    .timer-label {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .game-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .explanation {
+      margin-top: 24px;
+      padding: 22px;
+
+      background: #e9efdf;
+      border: 1px solid #b6c8a2;
+      border-left: 5px solid var(--green);
+      border-radius: 10px;
+    }
+
+    .explanation h3 {
+      color: var(--green);
+    }
+
+    .explanation p {
+      margin-bottom: 12px;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .source-link {
+      font-size: 13px;
+    }
+
+    /* =========================================
+       8. 팀 점수
+    ========================================= */
+
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(145px, 1fr)
+      );
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .team-card {
+      padding: 16px;
+      background: #fffaf0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .team-card.active {
+      border: 2px solid var(--green);
+      background: #eaf0e1;
+    }
+
+    .team-name {
+      font-weight: 850;
+    }
+
+    .team-score {
+      margin: 4px 0 10px;
+      color: var(--green);
+      font-size: 35px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .team-card .row {
+      justify-content: center;
+    }
+
+    .team-award[aria-pressed="true"] {
+      color: white;
+      background: var(--green);
+    }
+
+    /* =========================================
+       9. 결과 / 기록 / 문제 검토
+    ========================================= */
+
+    .result-hero {
+      padding: 26px 0;
+      text-align: center;
+    }
+
+    .result-score {
+      margin: 10px 0;
+      color: var(--green);
+      font-family: "Batang", serif;
+      font-size: clamp(55px, 9vw, 92px);
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 22px 0;
+    }
+
+    .stat {
+      padding: 20px 12px;
+      background: #f1e6d1;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--green);
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .review-card {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .review-card:last-child {
+      border-bottom: 0;
+    }
+
+    .review-card h3 {
+      margin-top: 10px;
+    }
+
+    .review-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .review-answer {
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    th {
+      color: var(--green);
+      background: #f1e6d1;
+      font-weight: 850;
+    }
+
+    .empty-state {
+      padding: 36px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* =========================================
+       10. 알림 / 팝업
+    ========================================= */
+
+    dialog {
+      width: min(620px, calc(100% - 32px));
+      max-height: 85vh;
+      padding: 28px;
+
+      color: var(--ink);
+      background: var(--paper-light);
+
+      border: 1px solid var(--gold);
+      border-radius: 16px;
+
+      box-shadow: 0 25px 90px rgba(0, 0, 0, 0.28);
+      overflow-y: auto;
+    }
+
+    dialog::backdrop {
+      background: rgba(24, 33, 29, 0.68);
+    }
+
+    dialog h2 {
+      margin-bottom: 18px;
+    }
+
+    dialog li {
+      margin-bottom: 12px;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      z-index: 100;
+
+      max-width: calc(100% - 32px);
+      padding: 13px 20px;
+
+      color: white;
+      background: var(--green);
+      border-radius: 12px;
+
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
+
+      font-size: 14px;
+      text-align: center;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    /* =========================================
+       11. 하단 / 로딩
+    ========================================= */
+
+    .site-footer {
+      padding: 22px 0 30px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      line-height: 1.85;
+      text-align: center;
+    }
+
+    .site-footer p {
+      margin: 5px 0;
+    }
+
+    .boot {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 36px;
+      text-align: center;
+    }
+
+    .boot h1 {
+      margin-top: 0;
+      font-family: "Batang", serif;
+      font-size: 38px;
+    }
+
+    .boot code {
+      padding: 3px 6px;
+      background: #eee2cd;
+      border-radius: 5px;
+    }
+
+    /* =========================================
+       12. 프로젝터 / 모바일
+    ========================================= */
+
+    body.projector .question-text {
+      font-size: clamp(32px, 4.6vw, 58px);
+    }
+
+    body.projector .answer-btn {
+      min-height: 105px;
+      font-size: clamp(22px, 3vw, 34px);
+    }
+
+    body.projector .site-footer {
+      display: none;
+    }
+
+    @media (min-width: 1000px) {
+      .sticky-settings {
+        position: sticky;
+        top: 20px;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 10px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page-shell {
+        width: calc(100% - 28px);
+      }
+
+      .site-header {
+        min-height: 82px;
+        gap: 10px;
+      }
+
+      .brand-title {
+        font-size: 15px;
+      }
+
+      .brand-subtitle {
+        font-size: 9px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        font-size: 21px;
+      }
+
+      .header-actions {
+        gap: 5px;
+      }
+
+      .header-actions .btn {
+        min-height: 36px;
+        padding: 6px 9px;
+        font-size: 12px;
+      }
+
+      main {
+        padding-top: 22px;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .panel {
+        padding: 21px 18px;
+      }
+
+      .answers {
+        grid-template-columns: 1fr;
+      }
+
+      .answers.ox {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .answers.ox .answer-btn {
+        min-height: 110px;
+      }
+
+      .answer-btn {
+        min-height: 74px;
+        padding: 15px;
+      }
+
+      .question-text {
+        margin: 18px 0 24px;
+      }
+
+      .stats-grid {
+        gap: 8px;
+      }
+
+      .stat {
+        padding: 15px 8px;
+      }
+
+      .stat strong {
+        font-size: 23px;
+      }
+
+      .game-controls > .btn-primary {
+        flex: 1;
+      }
+
+      .timer-value {
+        font-size: 29px;
+      }
+
+      .timer-box {
+        min-width: 75px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media print {
+      .site-header,
+      .site-footer,
+      .background-art,
+      .game-controls,
+      .toast,
+      button {
+        display: none !important;
+      }
+
+      body {
+        color: black;
+        background: white;
+      }
+
+      .page-shell {
+        width: 100%;
+      }
+
+      .panel {
+        box-shadow: none;
+        background: white;
+      }
+
+      .review-card {
+        break-inside: avoid;
+      }
+
+      a {
+        color: black;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#app" class="skip-link">
+    본문으로 이동
+  </a>
+
+  <!--
+    외부 이미지 파일 없이 표시되는 배경 장식.
+    세 파일만으로 실행할 수 있도록 구성했습니다.
+  -->
+  <svg
+    class="background-art"
+    viewBox="0 0 1600 500"
+    preserveAspectRatio="xMidYMax slice"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <!-- 먼 산 -->
+    <path
+      d="
+        M0 330
+        L120 190 L210 260 L355 100
+        L475 240 L600 170 L760 320
+        L920 140 L1050 230 L1200 80
+        L1340 220 L1470 150 L1600 290
+        V500 H0 Z
+      "
+      fill="#849589"
+    />
+
+    <path
+      d="
+        M0 410
+        L180 310 L300 360 L465 245
+        L620 355 L790 280 L950 390
+        L1120 260 L1320 350 L1490 270
+        L1600 350 V500 H0 Z
+      "
+      fill="#a9b3a0"
+    />
+
+    <!-- 왼쪽 전각 -->
+    <g>
+      <path
+        d="M15 322 H335 V500 H15 Z"
+        fill="#755445"
+      />
+
+      <path
+        d="
+          M0 320
+          Q75 307 120 254
+          H230
+          Q270 302 350 320
+          L342 339
+          H8 Z
+        "
+        fill="#284b44"
+      />
+
+      <path
+        d="M25 342 H325 V358 H25 Z"
+        fill="#a06a45"
+      />
+
+      <path
+        d="
+          M50 358 H72 V500 H50 Z
+          M158 358 H180 V500 H158 Z
+          M267 358 H289 V500 H267 Z
+        "
+        fill="#913f31"
+      />
+
+      <path
+        d="
+          M85 377 H144 V452 H85 Z
+          M193 377 H252 V452 H193 Z
+        "
+        fill="#d9c6a0"
+      />
+    </g>
+
+    <!-- 오른쪽 전각 -->
+    <g transform="translate(1250 0)">
+      <path
+        d="M15 322 H335 V500 H15 Z"
+        fill="#755445"
+      />
+
+      <path
+        d="
+          M0 320
+          Q75 307 120 254
+          H230
+          Q270 302 350 320
+          L342 339
+          H8 Z
+        "
+        fill="#284b44"
+      />
+
+      <path
+        d="M25 342 H325 V358 H25 Z"
+        fill="#a06a45"
+      />
+
+      <path
+        d="
+          M50 358 H72 V500 H50 Z
+          M158 358 H180 V500 H158 Z
+          M267 358 H289 V500 H267 Z
+        "
+        fill="#913f31"
+      />
+
+      <path
+        d="
+          M85 377 H144 V452 H85 Z
+          M193 377 H252 V452 H193 Z
+        "
+        fill="#d9c6a0"
+      />
+    </g>
+  </svg>
+
+  <header class="site-header page-shell">
+    <button
+      id="homeBtn"
+      class="brand"
+      type="button"
+      aria-label="한국사 퀴즈쇼 처음 화면으로"
+    >
+      <span class="brand-mark" aria-hidden="true">
+        史
+      </span>
+
+      <span>
+        <span class="brand-title">
+          한국사 퀴즈쇼
+        </span>
+
+        <span class="brand-subtitle">
+          역사를 배우고, 함께 도전하다
+        </span>
+      </span>
+    </button>
+
+    <nav
+      class="header-actions"
+      aria-label="게임 메뉴"
+    >
+      <button
+        id="helpBtn"
+        class="btn btn-sm btn-ghost"
+        type="button"
+      >
+        이용 안내
+      </button>
+
+      <button
+        id="fullscreenBtn"
+        class="btn btn-sm btn-ghost"
+        type="button"
+      >
+        전체 화면
+      </button>
+    </nav>
+  </header>
+
+  <!-- app.js가 이 영역에 각 화면을 표시합니다. -->
+  <main
+    id="app"
+    class="page-shell"
+    tabindex="-1"
+  >
+    <section class="boot panel ornament">
+      <span class="eyebrow">
+        한국사 2 · 수업 퀴즈
+      </span>
+
+      <h1>한국사 퀴즈쇼</h1>
+
+      <p id="bootMessage">
+        게임을 불러오는 중입니다.
+      </p>
+
+      <p class="muted small">
+        실행되지 않으면
+        <code>index.html</code>,
+        <code>questions.js</code>,
+        <code>app.js</code>가
+        같은 폴더에 있는지 확인해 주세요.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>
+      비상교육 『한국사 2』(2022 개정)의 공개 단원 체계를
+      참고한 독립 제작 학습 게임입니다.
+    </p>
+
+    <p>
+      출판사의 공식 서비스가 아니며,
+      교과서 원문이나 수록 문제를 복제하지 않았습니다.
+      문항별 해설에서 참고 출처를 확인할 수 있습니다.
+    </p>
+
+    <p>
+      조선풍은 화면 디자인입니다.
+      학습 범위는 한국사 2의 근현대사입니다.
+    </p>
+
+    <p>
+      개인 기록과 설정은 사용하는 브라우저에 저장됩니다.
+      우리 반 팀전은 한 화면을 보며 진행하는 방식입니다.
+    </p>
+  </footer>
+
+  <dialog
+    id="helpDialog"
+    aria-labelledby="helpTitle"
+  >
+    <h2 id="helpTitle">한국사 퀴즈쇼 이용 안내</h2>
+
+    <ol>
+      <li>
+        <strong>학습 범위를 선택하세요.</strong><br />
+        전체 범위를 선택하거나 원하는 단원을
+        여러 개 골라서 출제할 수 있습니다.
+      </li>
+
+      <li>
+        <strong>진행 방식을 선택하세요.</strong><br />
+        혼자 풀기는 직접 답을 선택하는 방식입니다.
+        우리 반 팀전은 진행자가 문제를 띄우고,
+        정답을 맞힌 팀에 점수를 부여하는 방식입니다.
+      </li>
+
+      <li>
+        <strong>문제 수와 시간을 정하세요.</strong><br />
+        선택한 범위의 문항 수보다 많은 문제는
+        출제하지 않습니다. 시간 제한 없이도 풀 수 있습니다.
+      </li>
+
+      <li>
+        <strong>정답과 해설을 확인하세요.</strong><br />
+        문제를 풀고 정답 공개 버튼을 누르면
+        정답, 해설, 참고 출처를 볼 수 있습니다.
+      </li>
+
+      <li>
+        <strong>수업 전에 문제를 검토하세요.</strong><br />
+        문제 검토 화면에서 문항과 해설을 확인하고,
+        수업에 사용하지 않을 문제는 제외할 수 있습니다.
+      </li>
+
+      <li>
+        <strong>틀린 문제를 복습하세요.</strong><br />
+        혼자 풀기 결과에서 오답만 다시 풀 수 있습니다.
+        팀전 점수는 개인별 학습 성취도를 뜻하지 않습니다.
+      </li>
+    </ol>
+
+    <div class="notice">
+      학생들의 휴대전화가 실시간으로 연결되는 방식은
+      아닙니다. 교실 화면 하나로 팀전을 진행할 수 있습니다.
+      저장 기능이 제한된 브라우저에서는 기록이 유지되지
+      않을 수 있습니다.
+    </div>
+
+    <form method="dialog" class="dialog-actions">
+      <button class="btn btn-green" type="submit">
+        확인
+      </button>
+    </form>
+  </dialog>
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    hidden
+  ></div>
+
+  <noscript>
+    <div class="page-shell panel">
+      이 게임을 실행하려면 브라우저에서
+      JavaScript를 허용해야 합니다.
+    </div>
+  </noscript>
+
+  <script>
+    /*
+      파일 누락 또는 초기화 실패 안내.
+      app.js가 정상 실행되면
+      window.QUIZ_APP_READY를 true로 설정합니다.
+    */
+    window.addEventListener("load", function () {
+      if (window.QUIZ_APP_READY) return;
+
+      const message = document.getElementById("bootMessage");
+
+      if (message) {
+        message.textContent =
+          "게임을 시작하지 못했습니다. " +
+          "questions.js와 app.js를 같은 폴더에 저장했는지 " +
+          "확인해 주세요.";
+      }
+    });
+  </script>
+
+  <!-- 순서를 바꾸지 마세요. -->
+  <script src="./questions.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
